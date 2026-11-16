@@ -1,0 +1,44 @@
+# OpenAI provider for the AI Gateway in AI_GATEWAY_ID.
+# The upstream credential is stored in a Konnect Config Store and read through
+# a konnect-type vault. The Authorization value must be the vault reference
+# alone; the stored secret includes the "Bearer " prefix.
+# Requires AI_GATEWAY_ID and OPENAI_API_KEY. OPENAI_API_KEY is the raw key.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_config_stores:
+  - ref: openai-config-store
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: openai-config-store
+    display_name: openai-config-store
+    secrets:
+      - ref: openai-auth-header
+        ai_gateway_config_store: !ref openai-config-store
+        key: openai-auth-header
+        value: !secret
+          parts:
+            - "Bearer "
+            - !env OPENAI_API_KEY
+
+ai_gateway_vaults:
+  - ref: openai-vault
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: openai-vault
+    description: Konnect Config Store vault for the OpenAI provider credential.
+    type: konnect
+    config:
+      config_store_id: !ref openai-config-store#id
+
+ai_gateway_model_providers:
+  - ref: openai-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: openai-lab
+    display_name: openai-lab
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: "{vault://openai-vault/openai-auth-header}"

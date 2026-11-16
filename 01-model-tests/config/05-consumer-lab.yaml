@@ -1,0 +1,21 @@
+# Consumer for the lab client. The API key is read from STS_TEST_APP_KEY.
+# This is not the OpenAI key and not the Konnect token.
+# The auth strategy sts-key-auth-lab already expects the header apikey.
+# Requires AI_GATEWAY_ID and STS_TEST_APP_KEY.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_consumers:
+  - ref: sts-test-app-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-test-app-lab
+    display_name: sts-test-app-lab
+    type: api-key
+    credentials:
+      - ref: sts-test-app-lab-key
+        ai_gateway_consumer: !ref sts-test-app-lab
+        name: sts-test-app-lab-key
+        display_name: sts-test-app-lab-key
+        type: api-key
+        api_key: !secret {source: !env STS_TEST_APP_KEY}

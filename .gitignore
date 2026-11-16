@@ -1,0 +1,8 @@
+.env
+.venv/
+.schema/
+plans/
+artifacts/
+out/
+*.pem
+*.key

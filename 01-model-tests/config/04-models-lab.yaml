@@ -1,0 +1,97 @@
+# Lab copies of the model specs. Names end in -lab so they do not collide
+# with sts-tts, sts-stt, sts-voice, or sts-chat.
+# The request selects the -lab name. The target stays the real OpenAI model.
+# Requires AI_GATEWAY_ID, the provider named openai-lab, and the auth strategy
+# sts-key-auth-lab from config/03-auth-strategy-lab.yaml.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_models:
+  - ref: sts-tts-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: model
+    name: sts-tts-lab
+    display_name: sts-tts-lab
+    capabilities: [audio/speech]
+    formats: [{type: openai}]
+    access:
+      auth_strategies: [sts-key-auth-lab]
+    config:
+      route:
+        paths: [/v1]
+        model:
+          body_param: model
+          values: [sts-tts-lab]
+    targets:
+      - name: tts-1
+        provider: openai-lab
+        config:
+          type: openai
+    policies: []
+
+  - ref: sts-stt-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: model
+    name: sts-stt-lab
+    display_name: sts-stt-lab
+    capabilities: [audio/transcription]
+    formats: [{type: openai}]
+    access:
+      auth_strategies: [sts-key-auth-lab]
+    config:
+      max_request_body_size: 26214400
+      response_streaming: deny
+      route:
+        paths: [/v1]
+        model:
+          body_param: model
+          values: [sts-stt-lab]
+    targets:
+      - name: whisper-1
+        provider: openai-lab
+        config:
+          type: openai
+    policies: []
+
+  - ref: sts-voice-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: model
+    name: sts-voice-lab
+    display_name: sts-voice-lab
+    capabilities: [realtime]
+    formats: [{type: openai}]
+    access:
+      auth_strategies: [sts-key-auth-lab]
+    config:
+      route:
+        paths: [/v1]
+        protocols: [ws, wss]
+    targets:
+      - name: gpt-realtime-2.1
+        provider: openai-lab
+        config:
+          type: openai
+    policies: []
+
+  - ref: sts-chat-lab
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: model
+    name: sts-chat-lab
+    display_name: sts-chat-lab
+    capabilities: [generate]
+    formats: [{type: openai}]
+    access:
+      auth_strategies: [sts-key-auth-lab]
+    config:
+      route:
+        paths: [/v1]
+        model:
+          body_param: model
+          values: [sts-chat-lab]
+    targets:
+      - name: gpt-4o-mini
+        provider: openai-lab
+        config:
+          type: openai
+    policies: []
