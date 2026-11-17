@@ -1,0 +1,26 @@
+# Lab 03 consumer groups with no policies. Step 10 allows only
+# sts-lab03-group-allowed on the model ACL.
+# consumers is a kongctl membership list of consumer names. It is not a field
+# on the Konnect Consumer Group body. Omitting consumers leaves current
+# members in place. An empty list clears them.
+# Requires AI_GATEWAY_ID. The consumers must already exist.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_consumer_groups:
+  - ref: sts-lab03-group-allowed
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab03-group-allowed
+    display_name: sts-lab03-group-allowed
+    consumers:
+      - sts-lab03-consumer-allowed
+    policies: []
+
+  - ref: sts-lab03-group-denied
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab03-group-denied
+    display_name: sts-lab03-group-denied
+    consumers:
+      - sts-lab03-consumer-denied
+    policies: []

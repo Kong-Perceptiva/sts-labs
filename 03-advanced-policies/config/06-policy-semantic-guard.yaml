@@ -1,0 +1,40 @@
+# Step 6. Semantic deny list. Embeddings go directly to OpenAI.
+# upstream_url is unset so the embedding call does not re-enter this model.
+# Search indexes exist only on logical database 0. The cache uses the same
+# database and a different index name.
+# header_value is the lab vault reference. The stored secret already
+# includes the Bearer prefix. The plan must not contain the raw OpenAI key.
+# dimensions 1024 matches the Kong example for text-embedding-3-small.
+# Requires AI_GATEWAY_ID, OPENAI_API_KEY, and STS_LAB03_REDIS_HOST.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab03-semantic-guard
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab03-semantic-guard
+    name: sts-lab03-semantic-guard
+    type: ai-semantic-prompt-guard
+    enabled: true
+    config:
+      rejection_mode: verbose
+      embeddings:
+        auth:
+          header_name: Authorization
+          header_value: "{vault://sts-lab03-vault/sts-lab03-openai-auth-header}"
+        model:
+          provider: openai
+          name: text-embedding-3-small
+      vectordb:
+        strategy: redis
+        distance_metric: cosine
+        threshold: 0.5
+        dimensions: 1024
+        redis:
+          host: !env STS_LAB03_REDIS_HOST
+          port: 16379
+          database: 0
+      rules:
+        deny_prompts:
+          - "Requests asking for confidential financial details, planned acquisitions, or internal budgets of Project Phoenix."

@@ -1,0 +1,40 @@
+# Step 9. Semantic cache. Logical database 0, the only database that can
+# hold a search index. The guard uses the same database and a different
+# index name. exact_caching checks the identical text first.
+# cache_ttl is 300 seconds. Embeddings go directly to OpenAI.
+# The cache is on the model. This schema has no per-consumer partition.
+# Use only synthetic prompts. The policy is not global.
+# Requires AI_GATEWAY_ID, OPENAI_API_KEY, and STS_LAB03_REDIS_HOST.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab03-semantic-cache
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab03-semantic-cache
+    name: sts-lab03-semantic-cache
+    type: ai-semantic-cache
+    enabled: true
+    config:
+      cache_ttl: 300
+      exact_caching: true
+      llm_format: openai
+      message_countback: 1
+      stop_on_failure: false
+      embeddings:
+        auth:
+          header_name: Authorization
+          header_value: "{vault://sts-lab03-vault/sts-lab03-openai-auth-header}"
+        model:
+          provider: openai
+          name: text-embedding-3-small
+      vectordb:
+        strategy: redis
+        distance_metric: cosine
+        threshold: 0.5
+        dimensions: 1024
+        redis:
+          host: !env STS_LAB03_REDIS_HOST
+          port: 16379
+          database: 0

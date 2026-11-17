@@ -1,0 +1,30 @@
+# Step 7. Sanitize email, phone, and credit card text on the way to OpenAI.
+# Placeholders are not restored in the response. The service log of redacted
+# values is turned off. The policy is not global.
+# The Data Plane reaches the service at STS_LAB03_PII_HOST port 18080.
+# Requires AI_GATEWAY_ID and STS_LAB03_PII_HOST.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab03-pii-sanitizer
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab03-pii-sanitizer
+    name: sts-lab03-pii-sanitizer
+    type: ai-sanitizer
+    enabled: true
+    config:
+      scheme: http
+      host: !env STS_LAB03_PII_HOST
+      port: 18080
+      sanitization_mode: INPUT
+      anonymize:
+        - email
+        - phone
+        - creditcard
+      redact_type: placeholder
+      recover_redacted: false
+      stop_on_error: true
+      skip_logging_sanitized_items: true
+      block_if_detected: false

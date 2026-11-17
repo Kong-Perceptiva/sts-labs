@@ -1,0 +1,34 @@
+# Two Lab 03 consumers. Each credential is the API key the client sends
+# in the apikey header. The keys are read from the shell.
+# They are not the OpenAI key and not the Konnect token.
+# Requires AI_GATEWAY_ID, STS_LAB03_ALLOWED_KEY, and STS_LAB03_DENIED_KEY.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_consumers:
+  - ref: sts-lab03-consumer-allowed
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab03-consumer-allowed
+    display_name: sts-lab03-consumer-allowed
+    type: api-key
+    credentials:
+      - ref: sts-lab03-consumer-allowed-key
+        ai_gateway_consumer: !ref sts-lab03-consumer-allowed
+        name: sts-lab03-consumer-allowed-key
+        display_name: sts-lab03-consumer-allowed-key
+        type: api-key
+        api_key: !secret {source: !env STS_LAB03_ALLOWED_KEY}
+
+  - ref: sts-lab03-consumer-denied
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab03-consumer-denied
+    display_name: sts-lab03-consumer-denied
+    type: api-key
+    credentials:
+      - ref: sts-lab03-consumer-denied-key
+        ai_gateway_consumer: !ref sts-lab03-consumer-denied
+        name: sts-lab03-consumer-denied-key
+        display_name: sts-lab03-consumer-denied-key
+        type: api-key
+        api_key: !secret {source: !env STS_LAB03_DENIED_KEY}

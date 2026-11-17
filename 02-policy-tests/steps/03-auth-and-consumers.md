@@ -25,6 +25,9 @@ Run this once. For each name that is missing or empty, it appends a new key to `
 ```bash
 umask 077
 touch "$LABS_DIR/.env"
+if [[ -s "$LABS_DIR/.env" && -n "$(tail -c 1 "$LABS_DIR/.env")" ]]; then
+  printf '\n' >>"$LABS_DIR/.env"
+fi
 for name in STS_LAB02_TIER1_KEY STS_LAB02_TIER2_KEY STS_LAB02_TIER3_KEY; do
   if ! grep -q "^${name}=..*" "$LABS_DIR/.env"; then
     printf '%s=%s\n' "$name" "$(openssl rand -hex 24)" >>"$LABS_DIR/.env"

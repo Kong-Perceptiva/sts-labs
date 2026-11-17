@@ -1,0 +1,20 @@
+# Step 5. Regex deny list for user message text. Not semantic matching.
+# The policy is not global. It does nothing until the model lists its name.
+# Requires AI_GATEWAY_ID.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab03-prompt-guard
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab03-prompt-guard
+    name: sts-lab03-prompt-guard
+    type: ai-prompt-guard
+    enabled: true
+    config:
+      rejection_mode: verbose
+      deny_patterns:
+        - "(?i)project phoenix"
+        - "(?i)confidential budget"
+        - "(?i)internal access code"
