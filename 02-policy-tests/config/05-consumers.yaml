@@ -1,0 +1,48 @@
+# Three Lab 02 consumers, one per tier. Each credential is the API key the
+# client sends in the apikey header. The keys are read from the shell.
+# They are not the OpenAI key and not the Konnect token.
+# Requires AI_GATEWAY_ID, STS_LAB02_TIER1_KEY, STS_LAB02_TIER2_KEY,
+# and STS_LAB02_TIER3_KEY.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_consumers:
+  - ref: sts-lab02-consumer-t1
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab02-consumer-t1
+    display_name: sts-lab02-consumer-t1
+    type: api-key
+    credentials:
+      - ref: sts-lab02-consumer-t1-key
+        ai_gateway_consumer: !ref sts-lab02-consumer-t1
+        name: sts-lab02-consumer-t1-key
+        display_name: sts-lab02-consumer-t1-key
+        type: api-key
+        api_key: !secret {source: !env STS_LAB02_TIER1_KEY}
+
+  - ref: sts-lab02-consumer-t2
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab02-consumer-t2
+    display_name: sts-lab02-consumer-t2
+    type: api-key
+    credentials:
+      - ref: sts-lab02-consumer-t2-key
+        ai_gateway_consumer: !ref sts-lab02-consumer-t2
+        name: sts-lab02-consumer-t2-key
+        display_name: sts-lab02-consumer-t2-key
+        type: api-key
+        api_key: !secret {source: !env STS_LAB02_TIER2_KEY}
+
+  - ref: sts-lab02-consumer-t3
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab02-consumer-t3
+    display_name: sts-lab02-consumer-t3
+    type: api-key
+    credentials:
+      - ref: sts-lab02-consumer-t3-key
+        ai_gateway_consumer: !ref sts-lab02-consumer-t3
+        name: sts-lab02-consumer-t3-key
+        display_name: sts-lab02-consumer-t3-key
+        type: api-key
+        api_key: !secret {source: !env STS_LAB02_TIER3_KEY}

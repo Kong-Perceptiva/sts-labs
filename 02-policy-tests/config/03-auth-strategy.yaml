@@ -1,0 +1,17 @@
+# Lab 02 key-auth strategy. The caller sends the header apikey.
+# Kong removes that header before the request reaches OpenAI.
+# This is not the OpenAI credential. That credential stays on the provider.
+# Requires AI_GATEWAY_ID.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_auth_strategies:
+  - ref: sts-lab02-key-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab02-key-auth
+    type: key-auth
+    config:
+      key_names: [apikey]
+      key_in_header: true
+      hide_credentials: true

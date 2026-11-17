@@ -1,0 +1,41 @@
+# Scenario 2. One request rate limit per tier. Each policy counts per consumer
+# with the local strategy. A policy does nothing until its consumer group
+# lists that policy name. These policies are not global.
+# Requires AI_GATEWAY_ID.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab02-rate-tier-1
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab02-rate-tier-1
+    name: sts-lab02-rate-tier-1
+    type: rate-limiting
+    enabled: true
+    config:
+      minute: 2
+      limit_by: consumer
+      policy: local
+
+  - ref: sts-lab02-rate-tier-2
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab02-rate-tier-2
+    name: sts-lab02-rate-tier-2
+    type: rate-limiting
+    enabled: true
+    config:
+      minute: 4
+      limit_by: consumer
+      policy: local
+
+  - ref: sts-lab02-rate-tier-3
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab02-rate-tier-3
+    name: sts-lab02-rate-tier-3
+    type: rate-limiting
+    enabled: true
+    config:
+      minute: 6
+      limit_by: consumer
+      policy: local

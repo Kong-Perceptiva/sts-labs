@@ -15,6 +15,8 @@ Each YAML under `config/` is applied from a reviewed plan. `kongctl plan --mode 
 
 `--mode apply` keeps the plan to that file. The default plan mode is sync. A sync plan also deletes gateway resources that are absent from the file. The saved plan is where that shows up, before anything is removed.
 
+When a step shows more than one `kongctl` command, paste and run each one on its own. Pasting the block at once runs them together, and the output does not show which command printed which lines.
+
 Step 1 installs `kongctl`. Step 2 loads the shared `.env` and creates a provider named `openai-lab` only when that name is missing. An existing provider is left as it is. The OpenAI key is written to a Konnect Config Store and read through a vault. The provider YAML stores the vault reference, not the key. Step 3 creates the auth strategy `sts-key-auth-lab`. The client sends the header `apikey`, and the Data Plane removes it before calling OpenAI. Step 4 creates the lab models `sts-tts-lab`, `sts-stt-lab`, `sts-voice-lab`, and `sts-chat-lab`. Each model uses that strategy and the provider `openai-lab`. Step 5 creates the consumer `sts-test-app-lab` and the credential that stores the API key, then checks that key with one chat call. Step 6 calls text to speech and speech to text through the local proxy. Step 7 opens a WebSocket to `sts-voice-lab`, checks a text reply and a spoken reply, then holds that socket open for a two-turn conversation. Step 8 is optional. It deletes the lab resources from the gateway in dependency order, then removes this lab's `plans/`, `artifacts/`, `out/`, and `.venv`. The shared `.env` is kept.
 
 `LABS_DIR` is the `labs` directory. Step 1 sets it. This lab is `$LABS_DIR/01-model-tests`. The shared `.env` is `$LABS_DIR/.env`.

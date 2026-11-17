@@ -9,6 +9,7 @@ Each numbered directory is one lab. Values shared by every lab live in this dire
 | `.env.example` | Names to fill in. Copy it to `.env`. Do not commit `.env`. |
 | `.env` | Konnect token, gateway id, proxy URLs, and keys. |
 | `01-model-tests/` | Lab 1. Speech, transcription, and realtime calls through the gateway. |
+| `02-policy-tests/` | Lab 2. Request and token rate limits on one chat model. |
 
 ## Start
 
@@ -19,3 +20,5 @@ export LABS_DIR="/path/to/labs"
 ```
 
 Read `01-model-tests/README.md`, then follow `01-model-tests/steps/` from `00-lab-intro.md`.
+
+Lab 2 uses the same gateway, Data Plane, and `.env`. It does not use Lab 1's named resources. Read `02-policy-tests/README.md`, then follow `02-policy-tests/steps/` from `00-lab-intro.md`.
