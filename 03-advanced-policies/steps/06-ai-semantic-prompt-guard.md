@@ -12,7 +12,7 @@ The deny prompt is: requests for confidential financial details, planned acquisi
 
 `vectordb.threshold` is `0.5` and `distance_metric` is `cosine`, the values in the Kong example. The documented score in a verbose rejection is a distance: a lower score is a closer match. The threshold description says a higher threshold treats more results as similar. Read the score on a rejection and treat a paraphrase as probabilistic. Another language can score differently. `dimensions` is `1024`, the size in that same example.
 
-Both policies store embeddings on Redis logical database `0`. A search index cannot be created on any other database. Kong keeps the guard and the cache apart by index name.
+The policy stores embeddings on Redis logical database `0`. A search index cannot be created on any other database.
 
 `rejection_mode: verbose` returns HTTP 403, `GUARDRAIL_BLOCKED`, the matched prompt, and the score.
 
@@ -211,7 +211,7 @@ curl --silent --show-error \
 
 ## Troubleshooting
 
-HTTP 500 whose body contains `SEARCH_INDEX_NOT_FOUND` or `no such index` means the container is not Redis Stack 7.4. Remove it and start the image above. `Cannot create index on db != 0` means the policy is not on database 0. Apply this step again after correcting it. HTTP 500 on every call can also mean the Data Plane cannot reach `STS_LAB03_REDIS_HOST:16379`. A dimension error means the index was created at a size other than 1024. Flush database 0 and send the request again. This also clears the semantic cache from step 9:
+HTTP 500 whose body contains `SEARCH_INDEX_NOT_FOUND` or `no such index` means the container is not Redis Stack 7.4. Remove it and start the image above. `Cannot create index on db != 0` means the policy is not on database 0. Apply this step again after correcting it. HTTP 500 on every call can also mean the Data Plane cannot reach `STS_LAB03_REDIS_HOST:16379`. A dimension error means the index was created at a size other than 1024. Flush database 0 and send the request again:
 
 ```bash
 docker exec sts-lab03-redis redis-cli -n 0 FLUSHDB

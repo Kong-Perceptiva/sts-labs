@@ -1,7 +1,7 @@
 # Lab 03 chat model. The client sends sts-lab03-chat.
 # Kong selects gpt-4o-mini on the provider sts-lab03-openai.
 # policies is empty and access has no acls. This file is the unrestricted baseline.
-# Re-apply it to detach a model policy or the ACL from step 10.
+# Re-apply it to detach a model policy or the ACL from step 9.
 # Attachment files repeat this spec. The only fields they change are policies
 # or access.acls. Cleanup deletes this file, not the attachment files.
 # Requires AI_GATEWAY_ID, provider sts-lab03-openai, and auth strategy

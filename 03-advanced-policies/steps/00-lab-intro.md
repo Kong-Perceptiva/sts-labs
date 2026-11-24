@@ -1,6 +1,6 @@
 # Lab 3. Advanced AI Gateway policies
 
-The lab shows six controls on one chat model. The client calls the local proxy. Kong holds the OpenAI credential and sends the request upstream. The calls do not go to OpenAI directly.
+The lab shows five controls on one chat model. The client calls the local proxy. Kong holds the OpenAI credential and sends the request upstream. The calls do not go to OpenAI directly.
 
 The Data Plane runs locally and takes its configuration from a Konnect AI Gateway. `kongctl` talks to Konnect. It does not use the Admin API inside the Data Plane. This lab does not create a Control Plane or a Data Plane.
 
@@ -12,7 +12,7 @@ When a step shows more than one `kongctl` command, paste and run each one on its
 
 ## What this lab creates
 
-Step 2 creates the Config Store `sts-lab03-config-store`, the vault `sts-lab03-vault`, and the provider `sts-lab03-openai`. Step 3 creates the auth strategy `sts-lab03-key-auth`. Step 4 creates the model `sts-lab03-chat`, two consumers, and two groups, with an empty policy list and no ACL. Steps 5 through 10 attach one exercise at a time. Step 11 is optional. It deletes the Lab 3 resources, the Lab 3 containers, and this lab's `plans/`, `artifacts/`, and `out/`. The shared `.env` is kept.
+Step 2 creates the Config Store `sts-lab03-config-store`, the vault `sts-lab03-vault`, and the provider `sts-lab03-openai`. Step 3 creates the auth strategy `sts-lab03-key-auth`. Step 4 creates the model `sts-lab03-chat`, two consumers, and two groups, with an empty policy list and no ACL. Steps 5 through 9 attach one exercise at a time. Step 10 is optional. It deletes the Lab 3 resources, the Lab 3 containers, and this lab's `plans/`, `artifacts/`, and `out/`. The shared `.env` is kept.
 
 `LABS_DIR` is the `labs` directory. Step 1 sets it. This lab is `$LABS_DIR/03-advanced-policies`. The shared `.env` is `$LABS_DIR/.env`.
 
@@ -23,7 +23,7 @@ Step 2 creates the Config Store `sts-lab03-config-store`, the vault `sts-lab03-v
 | `$LABS_DIR/03-advanced-policies/config/` | Declarative YAML. `04-model-baseline.yaml` is the unrestricted model. |
 | `$LABS_DIR/03-advanced-policies/plans/` | Local `kongctl` plan output. Not committed. |
 | `$LABS_DIR/03-advanced-policies/artifacts/` | Response headers and bodies. Not committed. |
-| `$LABS_DIR/03-advanced-policies/cleanup.sh` | Optional step 11. |
+| `$LABS_DIR/03-advanced-policies/cleanup.sh` | Optional step 10. |
 
 ## Exercises
 
@@ -35,11 +35,10 @@ Only one exercise is active at a time. Step 4 starts from the baseline. If an ex
 | 6 | `sts-lab03-semantic-guard` on the model | Redis Stack 7.4 |
 | 7 | `sts-lab03-pii-sanitizer` on the model | PII service |
 | 8 | `sts-lab03-prompt-template` on the model | No |
-| 9 | `sts-lab03-semantic-cache` on the model | Redis Stack 7.4 |
-| 10 | `access.acls.allow` = `sts-lab03-group-allowed` | No |
+| 9 | `access.acls.allow` = `sts-lab03-group-allowed` | No |
 | Baseline | Empty policy list, no ACL | No |
 
-No policy in this lab is global. Steps 6 and 9 share one Redis container and logical database 0. Search indexes cannot be created on any other database. The guard and the cache use different index names.
+No policy in this lab is global. Step 6 uses Redis logical database 0. Search indexes cannot be created on any other database.
 
 ## Return to baseline
 

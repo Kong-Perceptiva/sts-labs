@@ -1,4 +1,4 @@
-# Lab 03 consumer groups with no policies. Step 10 allows only
+# Lab 03 consumer groups with no policies. Step 9 allows only
 # sts-lab03-group-allowed on the model ACL.
 # consumers is a kongctl membership list of consumer names. It is not a field
 # on the Konnect Consumer Group body. Omitting consumers leaves current

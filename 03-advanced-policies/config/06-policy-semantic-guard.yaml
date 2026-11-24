@@ -1,7 +1,6 @@
 # Step 6. Semantic deny list. Embeddings go directly to OpenAI.
 # upstream_url is unset so the embedding call does not re-enter this model.
-# Search indexes exist only on logical database 0. The cache uses the same
-# database and a different index name.
+# Search indexes exist only on logical database 0.
 # header_value is the lab vault reference. The stored secret already
 # includes the Bearer prefix. The plan must not contain the raw OpenAI key.
 # dimensions 1024 matches the Kong example for text-embedding-3-small.

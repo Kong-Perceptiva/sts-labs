@@ -1,4 +1,4 @@
-# Step 10. Model ACL
+# Step 9. Model ACL
 
 ## Objective
 
@@ -18,7 +18,7 @@ None. Consumers and groups already exist from step 4.
 
 | File | Change |
 |---|---|
-| `config/10-model-acl.yaml` | Same model, plus `access.acls.allow: [sts-lab03-group-allowed]` |
+| `config/09-model-acl.yaml` | Same model, plus `access.acls.allow: [sts-lab03-group-allowed]` |
 
 `policies` stays empty.
 
@@ -39,7 +39,7 @@ If another exercise is active, follow [Return to baseline](00-lab-intro.md#retur
 ```bash
 kongctl plan \
   --mode apply \
-  --filename "$LABS_DIR/03-advanced-policies/config/10-model-acl.yaml" \
+  --filename "$LABS_DIR/03-advanced-policies/config/09-model-acl.yaml" \
   --output-file "$LABS_DIR/03-advanced-policies/plans/model-acl.apply-plan.json"
 ```
 
@@ -70,7 +70,7 @@ Wait until node `sync` is `STATE_IN_SYNC`.
 
 ```bash
 curl --silent --show-error \
-  --output "$LABS_DIR/03-advanced-policies/artifacts/10-allowed.json" \
+  --output "$LABS_DIR/03-advanced-policies/artifacts/09-allowed.json" \
   --write-out 'HTTP status: %{http_code}\nTotal time: %{time_total}s\n' \
   "$PROXY/v1/chat/completions" \
   --header 'Content-Type: application/json' \
@@ -84,7 +84,7 @@ curl --silent --show-error \
 
 ```bash
 curl --silent --show-error \
-  --output "$LABS_DIR/03-advanced-policies/artifacts/10-denied.json" \
+  --output "$LABS_DIR/03-advanced-policies/artifacts/09-denied.json" \
   --write-out 'HTTP status: %{http_code}\nTotal time: %{time_total}s\n' \
   "$PROXY/v1/chat/completions" \
   --header 'Content-Type: application/json' \
@@ -96,7 +96,7 @@ curl --silent --show-error \
 
 ```bash
 curl --silent --show-error \
-  --output "$LABS_DIR/03-advanced-policies/artifacts/10-missing.json" \
+  --output "$LABS_DIR/03-advanced-policies/artifacts/09-missing.json" \
   --write-out 'HTTP status: %{http_code}\nTotal time: %{time_total}s\n' \
   "$PROXY/v1/chat/completions" \
   --header 'Content-Type: application/json' \
@@ -107,7 +107,7 @@ curl --silent --show-error \
 
 ```bash
 curl --silent --show-error \
-  --output "$LABS_DIR/03-advanced-policies/artifacts/10-invalid.json" \
+  --output "$LABS_DIR/03-advanced-policies/artifacts/09-invalid.json" \
   --write-out 'HTTP status: %{http_code}\nTotal time: %{time_total}s\n' \
   "$PROXY/v1/chat/completions" \
   --header 'Content-Type: application/json' \

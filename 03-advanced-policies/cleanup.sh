@@ -40,7 +40,6 @@ delete_file config/05-policy-prompt-guard.yaml
 delete_file config/06-policy-semantic-guard.yaml
 delete_file config/07-policy-pii-sanitizer.yaml
 delete_file config/08-policy-prompt-template.yaml
-delete_file config/09-policy-semantic-cache.yaml
 delete_file config/05-consumers.yaml
 delete_file config/03-auth-strategy.yaml
 delete_file config/02-provider-openai.yaml

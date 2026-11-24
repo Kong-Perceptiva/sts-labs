@@ -1,4 +1,4 @@
-# Step 11. Cleanup
+# Step 10. Cleanup
 
 ## Purpose
 
@@ -6,7 +6,7 @@ Remove Lab 3 from the gateway and remove the containers this lab started. Option
 
 ## What will be deleted
 
-The script deletes, in order: the model, the two groups, the five policies, the two consumers, the auth strategy, and the provider file (vault and Config Store included). Attachment files repeat the model, so the script does not pass them to `kongctl delete`.
+The script deletes, in order: the model, the two groups, the four policies, the two consumers, the auth strategy, and the provider file (vault and Config Store included). Attachment files repeat the model, so the script does not pass them to `kongctl delete`.
 
 If `sts-lab03-redis` is running, the script runs `FLUSHDB` on logical database 0 only. It does not run `FLUSHALL`. It then removes `sts-lab03-redis` and `sts-lab03-pii` when those containers exist. Local `plans/`, `artifacts/`, and `out/` are removed.
 
