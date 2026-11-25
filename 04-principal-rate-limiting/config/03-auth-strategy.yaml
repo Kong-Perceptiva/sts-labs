@@ -1,0 +1,25 @@
+# Lab 04 key-auth strategy. The caller sends the header apikey.
+# Kong removes that header before the request reaches OpenAI.
+# principals.enabled looks that key up in the Identity directory named default.
+# identity_realms is empty. A populated realm list is rejected together with
+# principals.enabled. error_on_miss rejects a key that matches no principal.
+# This strategy does not create an AI Consumer.
+# Requires AI_GATEWAY_ID.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_auth_strategies:
+  - ref: sts-lab04-key-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: sts-lab04-key-auth
+    type: key-auth
+    config:
+      key_names: [apikey]
+      key_in_header: true
+      hide_credentials: true
+      identity_realms: []
+      principals:
+        enabled: true
+        directory: default
+        error_on_miss: true

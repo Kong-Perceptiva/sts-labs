@@ -1,0 +1,30 @@
+# Scenario 2. One request policy for all three principals.
+# metadata.tier selects the tier. This expression maps that value to the limit:
+# t1 is 2, t2 is 4, and t3 is 6. A missing or unrecognized tier also returns 2,
+# the smallest configured limit. The static limit 2 is used only when the
+# expression cannot be evaluated, so that failure is not more permissive.
+# identifier principal keeps a separate counter per principal, including two
+# principals that have the same tier. window_type fixed and window_size 60 are
+# the one-minute bucket. The policy is not global. Requires AI_GATEWAY_ID.
+_defaults:
+  kongctl:
+    namespace: default
+
+ai_gateway_policies:
+  - ref: sts-lab04-rate-tiers
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: sts-lab04-rate-tiers
+    name: sts-lab04-rate-tiers
+    type: rate-limiting-advanced
+    enabled: true
+    config:
+      identifier: principal
+      strategy: local
+      window_type: fixed
+      limit:
+        - 2
+      window_size:
+        - 60
+    expressions:
+      limit:
+        - '(has(principal.metadata.tier) && principal.metadata.tier == "t3") ? 6 : ((has(principal.metadata.tier) && principal.metadata.tier == "t2") ? 4 : ((has(principal.metadata.tier) && principal.metadata.tier == "t1") ? 2 : 2))'

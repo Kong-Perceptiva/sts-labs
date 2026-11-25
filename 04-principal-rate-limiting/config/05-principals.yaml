@@ -1,0 +1,68 @@
+# Three Lab 04 principals in the existing Identity directory named default.
+# The directory is external. This file does not create, update, or delete it.
+# Each imported API key is the value the client sends in the apikey header.
+# Imported key material is create-only. A later apply keeps the stored key
+# when the environment value changes. Rotation needs a new key ref.
+# metadata.tier identifies the tier. Scenario 2 maps that value to a request
+# limit, and scenario 3 maps it to a token quota. The limits stay in the
+# policies, not in this file.
+# metadata.counter_key is a unique token-counter key for scenario 3. Scenario 2
+# does not read it; identifier principal separates those request counters.
+# Requires the directory default, STS_LAB04_TIER1_KEY, STS_LAB04_TIER2_KEY,
+# and STS_LAB04_TIER3_KEY.
+_defaults:
+  kongctl:
+    namespace: sts-lab04
+
+identity:
+  directories:
+    - ref: default-directory
+      _external:
+        selector:
+          matchFields:
+            name: default
+      principals:
+        - ref: sts-lab04-principal-t1
+          type: agent
+          display_name: sts-lab04-principal-t1
+          description: Lab 04 tier 1 principal.
+          active: true
+          metadata:
+            tier: t1
+            counter_key: sts-lab04-principal-t1
+          api_keys:
+            - ref: sts-lab04-principal-t1-key
+              type: imported
+              name: sts-lab04-principal-t1-key
+              expires_at: null
+              secret: !secret {source: !env STS_LAB04_TIER1_KEY}
+
+        - ref: sts-lab04-principal-t2
+          type: agent
+          display_name: sts-lab04-principal-t2
+          description: Lab 04 tier 2 principal.
+          active: true
+          metadata:
+            tier: t2
+            counter_key: sts-lab04-principal-t2
+          api_keys:
+            - ref: sts-lab04-principal-t2-key
+              type: imported
+              name: sts-lab04-principal-t2-key
+              expires_at: null
+              secret: !secret {source: !env STS_LAB04_TIER2_KEY}
+
+        - ref: sts-lab04-principal-t3
+          type: agent
+          display_name: sts-lab04-principal-t3
+          description: Lab 04 tier 3 principal.
+          active: true
+          metadata:
+            tier: t3
+            counter_key: sts-lab04-principal-t3
+          api_keys:
+            - ref: sts-lab04-principal-t3-key
+              type: imported
+              name: sts-lab04-principal-t3-key
+              expires_at: null
+              secret: !secret {source: !env STS_LAB04_TIER3_KEY}
